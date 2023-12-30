@@ -61,6 +61,7 @@ export const ServiceProvider: React.FC<IcontextProps> = ({ children }) => {
   const [scheduler, setScheduler] = useState<IScheduler[]>([]);
   const [appointment, setAppointment] = useState<IAppointment[]>([]);
   useEffect(() => {
+    if (!token) return;
     const fetchData = async () => {
       try {
         const [schedulerResponse, appointmentResponse] = await Promise.all([

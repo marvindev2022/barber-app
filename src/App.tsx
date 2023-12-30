@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import bgImg from "./assets/background.svg";
 import logo from "./assets/logo.svg"
+import { clear } from "./App/clients/utils/storage";
 
 export default function App() {
   const [selectedOption, setSelectedOption] = useState<string | undefined>("");
@@ -14,7 +15,7 @@ export default function App() {
       navigate(`/${selectedOption}`);
     }
   }, [selectedOption]);
-
+  clear()
   return (
     <section
       style={{

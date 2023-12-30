@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { loginSchema } from "../../../schema/user.schema";
 import { useAuth } from "../Context/auth.context";
 import instance from "../service/instance";
-import { notifyError } from "../utils/notifications";
+import { notifyError, promiseToast } from "../utils/notifications";
 import { setItem } from "../utils/storage";
 
 interface IUserResponse {
@@ -51,28 +51,21 @@ export default function FormSignin() {
       });
     }
 
-    try {
-      async function fetchSignin() {
-        const { data, status } = await instance.post(
-          "/users/login",
-          formInputsSigninState
-        );
-        if (status <400) {
-          const { token, ...user } = data as IUserResponse;
-          setItem("token", token);
-          setItem("user", JSON.stringify(user));
-        } else {
-          return  notifyError("Erro ao fazer login");
-        }
-        return navigate("/client/home");
-      }
-      fetchSignin();
-    } catch (err: any) {
-      console.log(err)
-      notifyError(err.message);
-    }
+    fetchSignin();
   }
-
+  async function fetchSignin() {
+    const { data, status } = await promiseToast(
+      instance.post("/users/login", formInputsSigninState, { timeout: 60000 }),
+      "Fazendo login...",
+      "Login realizado com sucesso!"
+    );
+    if (status < 400) {
+      const { token, ...user } = data as IUserResponse;
+      setItem("token", token);
+      setItem("user", JSON.stringify(user));
+    }
+    return navigate("/client/home");
+  }
   return (
     <form
       className="flex flex-col gap-8 items-center mt-8"

@@ -7,13 +7,16 @@ import { ClientProvider } from "../Context/Client.context";
 import { ServiceProvider } from "../Context/service.context";
 import NotFoundPage from "../../notfound/index";
 import { getItem } from "../utils/storage";
+import { ToastContainer } from "react-toastify";
 export default function MainRoutes(): JSX.Element {
   function ProtectedRoutes({ redirectTo }: { redirectTo: string }) {
     const token = getItem("token");
     return token ? <Outlet /> : <Navigate to={redirectTo} />;
   }
   return (
+    
     <AuthProvider>
+      <ToastContainer/>
       <ClientProvider>
         <ServiceProvider>
           <Routes>
