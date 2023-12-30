@@ -7,7 +7,7 @@ export interface IAppointment {
   id: string;
   hour: {
     id: string;
-    time: Date; // Adjust the type based on your actual date/time format
+    time: Date;
     scheduleId: string;
   };
   hourId: string;
@@ -16,14 +16,14 @@ export interface IAppointment {
 
 export interface Hour {
   id: string;
-  time: string; // Adjust the type based on your actual date/time format
+  time: string;
   scheduleId: string;
 }
 
 export interface Schedule {
   id: string;
   adminId: string;
-  date: string; // Adjust the type based on your actual date format
+  date: string;
   hours: Hour[];
   appointments: IAppointment[];
 }
@@ -35,7 +35,7 @@ export interface RenderSchedulerState {
 export interface IScheduler {
   id: string;
   adminId: string;
-  date: string; // Adjust the type based on your actual date format
+  date: string;
   hours: Hour[];
   appointments: IAppointment[];
 }
@@ -57,7 +57,7 @@ const ServiceContext = createContext<ServiceContextType | undefined>(undefined);
 
 export const ServiceProvider: React.FC<IcontextProps> = ({ children }) => {
   const token = getItem("token");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date()); // You can set the initial date here
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [scheduler, setScheduler] = useState<IScheduler[]>([]);
   const [appointment, setAppointment] = useState<IAppointment[]>([]);
   useEffect(() => {
@@ -78,12 +78,10 @@ export const ServiceProvider: React.FC<IcontextProps> = ({ children }) => {
           }),
         ]);
 
-       
-        
         setScheduler(schedulerResponse.data);
         setAppointment(appointmentResponse.data);
-      } catch (error:any) {
-        notifyError( error.message);
+      } catch (error: any) {
+        notifyError(error.message);
       }
     };
 
