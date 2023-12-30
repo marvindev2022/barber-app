@@ -50,17 +50,18 @@ export const notifyWarning = (message:string) => {
 };
 
 
-export const promiseToast = async(
+export const promiseToast = (
   promise: Promise<any>,
   pendingMessage: string,
   successMessage: string,
 ) => {
-  return await toast.promise(promise, {
+  return  toast.promise(promise, {
     pending: pendingMessage,
     success: successMessage,
     error: {
       render: ({ data }:any) => {
-        return `Erro: ${data.response.data.message}`;
+        let response = data.message === "Network Error" ? 'Erro de conexão com o servidor' : data.response?.data?.message ?? data.message;
+        return `Erro: ${response}`;
       },
     },
   }, {
