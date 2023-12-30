@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { loginSchema } from "../../../schema/user.schema";
 import { useAuth } from "../Context/auth.context";
 import instance from "../service/instance";
-import { notifyError, promiseToast } from "../utils/notifications";
+import {  promiseToast } from "../utils/notifications";
 import { setItem } from "../utils/storage";
 
 interface IUserResponse {
