@@ -1,7 +1,14 @@
-import  { useEffect, useState } from "react";
-import { format, startOfMonth, endOfMonth, isSameDay, addMonths, subMonths } from "date-fns";
+import { useEffect, useState } from "react";
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  isSameDay,
+  addMonths,
+  subMonths,
+  startOfDay,
+} from "date-fns";
 import { useService } from "../../../Context/service.context";
-
 
 interface DayData {
   date: Date;
@@ -83,18 +90,21 @@ const RenderCalendar = (): JSX.Element => {
     setNextMonth(addMonths(currentDate, 1));
   };
 
+  const isSameDayNormalized = (date1:Date, date2:Date) =>
+  isSameDay(startOfDay(date1), startOfDay(date2));
+
   return (
     <section className="w-full h-full px-5 flex flex-col gap-5">
       <div className="flex flex-col justify-between items-center">
-        <div className="flex items-center">
-          <button onClick={handlePrevMonth} className="mr-2">
-            {"<<Previous"}
+        <div className="w-full flex justify-center items-center text-center">
+          <button onClick={handlePrevMonth} className="mr-2 text-xl font-bold mb-4">
+            {"<< "}
           </button>
           <h2 className="text-2xl font-bold mb-4">
             {format(currentDate, "MMMM yyyy")}
           </h2>
-          <button onClick={handleNextMonth} className="ml-2">
-            {" Next>>"}
+          <button onClick={handleNextMonth} className="ml-2 text-xl font-bold mb-4">
+            {" >>"}
           </button>
         </div>
         <table className="table-fixed w-full border-2 border-black">
@@ -104,7 +114,9 @@ const RenderCalendar = (): JSX.Element => {
                 (day, index) => (
                   <th
                     key={index}
-                    className={`w-1/7 px-4 py-2 text-center ${!index && "text-red-500"}`}
+                    className={`w-1/7 px-4 py-2 text-center ${
+                      !index && "text-red-500"
+                    }`}
                   >
                     {day}
                   </th>
@@ -117,13 +129,17 @@ const RenderCalendar = (): JSX.Element => {
               <tr key={rowIndex}>
                 {week.map((day, colIndex) => {
                   const isCurrentDay =
-                    isSameDay(day.date, new Date()) && month === currentDate.getMonth();
+                    isSameDay(day.date, new Date()) &&
+                    month === currentDate.getMonth();
 
                   const hasScheduler = scheduler.some((schedule) =>
-                    isSameDay(new Date(schedule.date), day.date)
+                    isSameDayNormalized(new Date(schedule.date), day.date)
                   );
 
-                  const isAvailable = hasScheduler && Number(day.date) >= Number(new Date());
+                  const isAvailable =
+                    hasScheduler &&
+                    startOfDay(day.date).getTime() >=
+                      startOfDay(new Date()).getTime();
 
                   return (
                     <td
@@ -132,7 +148,7 @@ const RenderCalendar = (): JSX.Element => {
                       }}
                       key={colIndex}
                       className={`w-1/7 px-4 py-2 text-center cursor-pointer border border-black ${
-                        isCurrentDay && "bg-green-200"
+                        isCurrentDay && "text-red-500"
                       } ${isAvailable && "bg-secondary"} hover:bg-primary`}
                     >
                       {day.dayOfMonth !== undefined ? day.dayOfMonth : ""}
