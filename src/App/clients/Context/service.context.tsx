@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import instance from "../service/instance";
+import { notifyError } from "../utils/notifications";
+import { getItem } from "../utils/storage";
 
 export interface IAppointment {
   id: string;
@@ -54,6 +56,7 @@ interface ServiceContextType {
 const ServiceContext = createContext<ServiceContextType | undefined>(undefined);
 
 export const ServiceProvider: React.FC<IcontextProps> = ({ children }) => {
+  const token = getItem("token");
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date()); // You can set the initial date here
   const [scheduler, setScheduler] = useState<IScheduler[]>([]);
   const [appointment, setAppointment] = useState<IAppointment[]>([]);
@@ -64,27 +67,23 @@ export const ServiceProvider: React.FC<IcontextProps> = ({ children }) => {
           instance.get(`/schedule/all`, {
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${token}`,
             },
           }),
           instance.get("/appointment/all", {
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${token}`,
             },
           }),
         ]);
 
-        const schedulerData = schedulerResponse.data.filter(
-          (schedule: any) =>
-            Number(new Date(schedule.date.split("T")[0]+"T08:00:00Z")) >= Number(new Date())
-        );
        
         
-        setScheduler(schedulerData);
+        setScheduler(schedulerResponse.data);
         setAppointment(appointmentResponse.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      } catch (error:any) {
+        notifyError( error.message);
       }
     };
 
@@ -111,6 +110,7 @@ export const useService = () => {
   const context = useContext(ServiceContext);
 
   if (context === undefined) {
+    notifyError("useService must be used within a ServiceProvider");
     throw new Error("useService must be used within a ServiceProvider");
   }
 
