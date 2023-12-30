@@ -1,6 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { loginSchema } from "../../../schema/user.schema";
 import { useAuth } from "../Context/auth.context";
 import instance from "../service/instance";
+import { notifyError } from "../utils/notifications";
+import { setItem } from "../utils/storage";
 
 interface IUserResponse {
   token: string;
@@ -22,6 +25,7 @@ export default function FormSignin() {
     email: inputEmail,
     password: inputPassword,
   };
+  const navigate = useNavigate();
 
   function resetBorderColor() {
     const inputs = [inputEmail, inputPassword];
@@ -30,12 +34,14 @@ export default function FormSignin() {
       input && input.current && (input.current.style.border = "1px solid #ccc");
     });
   }
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     resetBorderColor();
     const validate = loginSchema.validate(formInputsSigninState, {
       abortEarly: false,
     });
+
     if (validate.error) {
       validate.error.details.forEach((err) => {
         const input = inputRefs[err.context?.key as keyof typeof inputRefs];
@@ -44,19 +50,29 @@ export default function FormSignin() {
           (input.current.style.border = "1px solid red");
       });
     }
-    async function fetchSignin() {
-      const { data, status } = await instance.post(
-        "/users/login",
-        formInputsSigninState
-      );
-      const { token, ...user } = data as IUserResponse;
-      if (status < 400) {
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
+
+    try {
+      async function fetchSignin() {
+        const { data, status } = await instance.post(
+          "/users/login",
+          formInputsSigninState
+        );
+        if (status <400) {
+          const { token, ...user } = data as IUserResponse;
+          setItem("token", token);
+          setItem("user", JSON.stringify(user));
+        } else {
+          return  notifyError("Erro ao fazer login");
+        }
+        return navigate("/client/home");
       }
+      fetchSignin();
+    } catch (err: any) {
+      console.log(err)
+      notifyError(err.message);
     }
-    fetchSignin();
   }
+
   return (
     <form
       className="flex flex-col gap-8 items-center mt-8"
