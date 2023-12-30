@@ -49,6 +49,7 @@ export default function FormSignin() {
           input.current &&
           (input.current.style.border = "1px solid red");
       });
+      return
     }
 
     fetchSignin();
