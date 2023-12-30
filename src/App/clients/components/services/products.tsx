@@ -4,7 +4,7 @@ import {motion} from "framer-motion"
 export default function RenderProducts() {
   const { filterProducts } = useClient();
   return (
-    <section className="w-full max-h-screen flex flex-wrap gap-5 justify-center items-center overflow-y-auto ">
+    <section id="scroll" className="w-full max-h-screen flex flex-wrap gap-5 justify-center items-center overflow-y-auto  ">
       {filterProducts.map((procut) => (
         <motion.div
         initial={{scale:0}}
