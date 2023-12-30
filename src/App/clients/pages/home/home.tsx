@@ -12,7 +12,7 @@ export default function RenderHome() {
   const { sectionSelected, setInputSearch } =
     useClient();
   return (
-    <section className="w-full h-full flex flex-col  ">
+    <section  className="w-full h-full flex flex-col  ">
       <RenderDashBoard />
       <div className="w-full h-64  flex ">
         <RenderHamburgerMenu />
