@@ -4,7 +4,7 @@ export const notifySucess = (message:string) => {
   toast.success(message, {
     position: toast.POSITION.TOP_RIGHT,
     autoClose: 2000,
-    theme: "colored",
+    theme: "light",
     closeOnClick: true,
     pauseOnHover: false,
   });
@@ -14,7 +14,7 @@ export const notifyError = (message:string) => {
   toast.error(message, {
     position: toast.POSITION.TOP_RIGHT,
     autoClose: 2000,
-    theme: "colored",
+    theme: "light",
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -27,7 +27,7 @@ export const notifyInfo = (message:string) => {
   toast.info(message, {
     position: toast.POSITION.TOP_RIGHT,
     autoClose: 2000,
-    theme: "colored",
+    theme: "light",
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -40,7 +40,7 @@ export const notifyWarning = (message:string) => {
   toast.warn(message, {
     position: toast.POSITION.TOP_RIGHT,
     autoClose: 2000,
-    theme: "colored",
+    theme: "light",
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -66,7 +66,7 @@ export const promiseToast = (
     },
   }, {
     position: toast.POSITION.TOP_RIGHT,
-    autoClose: 2000,
+    autoClose: 5000,
     theme: "light",
     hideProgressBar: false,
     closeOnClick: true,

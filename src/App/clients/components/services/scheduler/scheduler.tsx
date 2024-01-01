@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { IScheduler, useService } from "../../../Context/service.context";
 import { format } from "date-fns";
+import compareDate from "../../../utils/compareDate";
+
+
 
 function RenderScheduler() {
   const {
@@ -13,7 +16,7 @@ function RenderScheduler() {
       scheduler.filter(
         (schedule) =>
           format(
-            new Date(schedule.date.split("T")[0] + "T08:00:00Z"),
+            new Date(`${schedule.date.split("T")[0]}T08:00:00Z`),
             "dd/MM/yyyy"
           ) === format(new Date(selectedDate as Date), "dd/MM/yyyy")
       )
@@ -30,9 +33,9 @@ function RenderScheduler() {
             className="flex flex-col  items-center max-h-62 h-full min-h-10 overflow-auto"
           >
             {
-              <span className="text-white text-xl text-center ">
-                <h1 className="text-white text-xl text-center ">
-                  Agendamentos
+              <span >
+                <h1 className="text-primary text-xl text-center ">
+                  Sala de Espera
                 </h1>
                 <h2 className="text-white text-xl text-center ">
                   {format(
@@ -65,13 +68,13 @@ function RenderScheduler() {
                       </div>
                     ) : (
                       <div className="flex flex-row items-center gap-2">
-                        {new Date(hour.time) > new Date() ? (
+                        {compareDate(hour.time) ? (
                           <div className="w-2 h-2 rounded-full bg-green-500"></div>
                         ) : (
                           <div className="w-2 h-2 rounded-full bg-newgray"></div>
                         )}
                         <div className="text-white text-sm">
-                          {new Date(hour.time) > new Date()
+                          {compareDate(hour.time)
                             ? "Disponivel"
                             : "Expirado"}
                         </div>

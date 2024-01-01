@@ -56,7 +56,7 @@ export default function FormSignin() {
   }
   async function fetchSignin() {
     const { data, status } = await promiseToast(
-      instance.post("/users/login", formInputsSigninState, { timeout: 60000 }),
+      instance.post("/users/login", formInputsSigninState,),
       "Fazendo login...",
       "Login realizado com sucesso!"
     );
